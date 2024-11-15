@@ -106,7 +106,7 @@ class MenuBusiness
         $data['edit_time'] = $dateTime;
         $data['delete_time'] = $dateTime;
 
-        return $this->menuModel->where('menu_id', $menuId)->save($data);
+        return $this->menuModel->where('menu_id', $menuId)->limit(1)->save($data);
     }
 
     /**
@@ -120,7 +120,7 @@ class MenuBusiness
         $data['deleted'] = 0;
         $data['edit_time'] = $dateTime;
 
-        return $this->menuModel->where('menu_id', $menuId)->save($data);
+        return $this->menuModel->where('menu_id', $menuId)->limit(1)->save($data);
     }
 
     /**
@@ -152,6 +152,6 @@ class MenuBusiness
             }
         }
 
-        return $this->menuModel->where('menu_id', $menuId)->save($updateData);
+        return $this->menuModel->where('menu_id', $menuId)->limit(1)->save($updateData);
     }
 }

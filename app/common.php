@@ -19,3 +19,25 @@ function trans_tree($parentId, $source, $parentKey = 'parent_id', $childKey= 'ch
     }
     return $result;
 }
+
+/**
+ * aes ecb加密
+ * @param $data
+ * @param $key
+ * @return false|string
+ */
+function aes_ecb_encrypt($data, $key)
+{
+    return openssl_encrypt ($data, 'aes-256-ecb', $key);
+}
+
+/**
+ * aes ecb解密
+ * @param $data
+ * @param $key
+ * @return false|string
+ */
+function aes_ecb_decrypt ($data, $key)
+{
+    return openssl_decrypt ($data, 'aes-256-ecb', $key);
+}
