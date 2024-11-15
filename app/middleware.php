@@ -1,5 +1,7 @@
 <?php
 // 全局中间件定义文件
+use app\middleware\Authentication;
+
 return [
     // 全局请求缓存
     // \think\middleware\CheckRequestCache::class,
@@ -7,4 +9,6 @@ return [
     // \think\middleware\LoadLangPack::class,
     // Session初始化
     // \think\middleware\SessionInit::class
+    //登录凭据校验(应当在路由中间件部署)
+//    Authentication::class,
 ];

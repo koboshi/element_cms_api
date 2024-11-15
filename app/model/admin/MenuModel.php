@@ -2,11 +2,11 @@
 
 namespace app\model\admin;
 
-use think\Model;
+use app\base\BaseModel;
 
-class MenuModel extends Model
+class MenuModel extends BaseModel
 {
-    protected $connection = 'mysql';
+    protected $connection = 'element_cms';
 
     protected $table = 'admin_menu';
 

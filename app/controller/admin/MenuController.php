@@ -2,18 +2,32 @@
 
 namespace app\controller\admin;
 
-use app\BaseController;
+use app\base\BaseController;
+use app\business\admin\MenuBusiness;
+use think\response\Json;
 
 class MenuController extends BaseController
 {
+    protected MenuBusiness $menuBusiness;
+
+    protected function initialize()
+    {
+        parent::initialize();
+        $this->menuBusiness = invoke(MenuBusiness::class);
+    }
+
     /**
-     * 获取所有菜单项(支持指定父id获取)
+     * 获取所有菜单项用于渲染(支持指定父id获取)
      * @param int $parentId
-     * @return void
+     * @return Json
      */
     public function getAllAction(int $parentId = 0)
     {
-        //todo
+        $controllerName = $this->request->controller(true);
+        $actionName = $this->request->action(true);
+        $data = $this->menuBusiness->getActiveMenus();
+
+        return json($data);
     }
 
     /**
@@ -22,7 +36,7 @@ class MenuController extends BaseController
      */
     public function addAction()
     {
-
+        //TODO
     }
 
     /**
@@ -31,7 +45,7 @@ class MenuController extends BaseController
      */
     public function editAction()
     {
-
+        //TODO
     }
 
     /**
@@ -40,6 +54,6 @@ class MenuController extends BaseController
      */
     public function delAction()
     {
-
+        //TODO
     }
 }

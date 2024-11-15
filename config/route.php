@@ -3,6 +3,8 @@
 // | 路由设置
 // +----------------------------------------------------------------------
 
+use app\middleware\Authentication;
+
 return [
     // pathinfo分隔符
     'pathinfo_depr'         => '/',
@@ -43,4 +45,8 @@ return [
     'default_jsonp_handler' => 'jsonpReturn',
     // 默认JSONP处理方法
     'var_jsonp_handler'     => 'callback',
+    //路由中间件
+    'middleware' => array(
+        Authentication::class,
+    )
 ];

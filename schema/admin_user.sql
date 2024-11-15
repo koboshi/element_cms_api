@@ -3,7 +3,7 @@ CREATE TABLE `admin_user` (
 	`role_id` INT UNSIGNED NOT NULL DEFAULT '0',
 	`name` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
 	`password` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
-	`ticket` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
+	`ticket` VARCHAR(100) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
 	`expire_time` DATETIME NOT NULL,
 	`status` TINYINT UNSIGNED NOT NULL DEFAULT '0',
 	`editor` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
@@ -17,4 +17,5 @@ CREATE TABLE `admin_user` (
 COMMENT='后台管理员信息表'
 COLLATE='utf8mb4_0900_ai_ci'
 ENGINE=InnoDB
+AUTO_INCREMENT=2
 ;

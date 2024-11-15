@@ -2,13 +2,14 @@
 
 namespace app\business\admin;
 
+use app\base\BaseBusiness;
 use app\model\admin\UserModel;
 
 /**
  * 后台用户业务逻辑
  * @author koboshi
  */
-class UserBusiness
+class UserBusiness extends BaseBusiness
 {
     private string $salt = 'koboshi';
 
@@ -17,6 +18,7 @@ class UserBusiness
     public function __construct(UserModel $usrModel)
     {
         $this->userModel = $usrModel;
+        $this->salt = env('APP_SALT', 'default');
     }
 
 
@@ -26,16 +28,12 @@ class UserBusiness
      * @param int $page
      * @param $countOnly
      * @param int $size
-     * @return UserModel[]|array|\think\Collection
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @return array|int
      */
     public function getAllUsers(string $username, int $deleted, int $page, $countOnly = false, int $size = 20)
     {
         $username = trim($username);
-        $queryObj = $this->userModel->column(array('admin_id', 'role_id', 'name', 'editor', 'deleted', 'add_time',
-            'edit_time', 'delete_time'));
+        $queryObj = $this->userModel;
         if (!empty($username)) {
             $queryObj = $this->userModel->where('username', 'like', $username);
         }
@@ -43,9 +41,10 @@ class UserBusiness
             $queryObj->where('deleted', $deleted);
         }
         if ($countOnly) {
-            $queryObj->count();
+            return $queryObj->count();
         }
-        return $queryObj->page($page, $size)->select();
+        return $queryObj->page($page, $size)->column(array('admin_id', 'role_id', 'name', 'editor', 'deleted', 'add_time',
+            'edit_time', 'delete_time'));
     }
 
     /**
@@ -57,13 +56,12 @@ class UserBusiness
         if ($uid < 1) {
             return array();
         }
-        $userInfo = $this->userModel->where('uid', $uid)->limit(1)
-            ->column(array('uid', 'role_id', 'name', 'editor', 'deleted', 'add_time', 'edit_time', 'delete_time'))
-            ->findOrEmpty();
+        $userInfo = $this->userModel->where('admin_id', $uid)->limit(1)
+            ->column(array('admin_id', 'role_id', 'name', 'editor', 'deleted', 'add_time', 'edit_time', 'delete_time'));
         if (empty($userInfo)) {
             return array();
         }
-        return $userInfo;
+        return $userInfo[0];
     }
 
     protected function genPassHash(string $password)
@@ -84,7 +82,7 @@ class UserBusiness
             return null;
         }
         $passwordHash = $this->genPassHash($password);
-        $userInfo = $this->userModel->where('deleted', 0)->where('username', $username)
+        $userInfo = $this->userModel->where('deleted', 0)->where('name', $username)
             ->where('password', $passwordHash)->limit(1)->findOrEmpty();
         if (empty($userInfo)) {
             return null;
@@ -108,13 +106,13 @@ class UserBusiness
         $data['name'] = trim($name);
         $data['password'] = $this->genPassHash($password);//只存密码的hash
         $data['ticket'] = '';
-        $data['expire_time'] = '0000-00-00 00:00:00';
+        $data['expire_time'] = EMPTY_DATETIME;
         $data['status'] = 1;
         $data['editor'] = trim($editor);
         $data['deleted'] = 0;
         $data['add_time'] = $dateTime;
         $data['edit_time'] = $dateTime;
-        $data['deleted_time'] = '0000-00-00 00:00:00';
+        $data['deleted_time'] = EMPTY_DATETIME;
         $flag = $this->userModel->save($data);
         if ($flag) {
             return $this->menuModel->getKey();
@@ -141,7 +139,7 @@ class UserBusiness
         $data['edit_time'] = $dateTime;
         $data['delete_time'] = $dateTime;
 
-        return $this->userModel-where('uid', $uid)->limit(1)->save($data);
+        return $this->userModel-where('admin_id', $uid)->limit(1)->save($data);
     }
 
     /**
@@ -162,7 +160,7 @@ class UserBusiness
         $data['deleted'] = 0;
         $data['edit_time'] = $dateTime;
 
-        return $this->userModel-where('uid', $uid)->limit(1)->save($data);
+        return $this->userModel-where('admin_id', $uid)->limit(1)->save($data);
     }
 
     /**
@@ -183,10 +181,10 @@ class UserBusiness
         $dateTime = date("Y-m-d H:i:s");
         $data = array();
         $data['ticket'] = '';
-        $data['expire_time'] = '0000-00-00 00:00:00';
+        $data['expire_time'] = EMPTY_DATETIME;
         $data['edit_time'] = $dateTime;
         $data['password'] = $newPasswordHash;
-        return $this->userModel->where('uid', $uid)->where('deleted', 0)
+        return $this->userModel->where('admin_id', $uid)->where('deleted', 0)
             ->where('password', $oldPasswordHash)->limit(1)->save($data);
     }
 }

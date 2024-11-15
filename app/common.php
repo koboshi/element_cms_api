@@ -1,19 +1,23 @@
 <?php
+const EMPTY_DATETIME = '1970-01-01 00:00:00';
+const EMPTY_DATE = '1970-01-01';
+
 // 应用公共文件
 /**
  * 转换为tree
- * @param $parentId
- * @param $source
- * @param $parentKey
- * @param $childKey
+ * @param int $parentId
+ * @param array $source
+ * @param string $pKey
+ * @param string $parentKey
+ * @param string $childKey
  * @return array
  */
-function trans_tree($parentId, $source, $parentKey = 'parent_id', $childKey= 'children')
+function trans_tree(int $parentId, array $source, string $pKey = 'id', string $parentKey = 'parent_id', string $childKey= 'children')
 {
     $result = array();
     foreach ($source as $item) {
         if ($item[$parentKey] == $parentId) {
-            $item[$childKey] = trans_tree($item[$parentKey], $source);
+            $item[$childKey] = trans_tree($item[$pKey], $source, $pKey, $parentKey, $childKey);
             $result[] = $item;
         }
     }

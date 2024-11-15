@@ -1,7 +1,7 @@
 <?php
 declare (strict_types = 1);
 
-namespace app;
+namespace app\base;
 
 use think\App;
 use think\exception\ValidateException;
@@ -53,6 +53,45 @@ abstract class BaseController
     // 初始化
     protected function initialize()
     {}
+
+    /**
+     * @param int $errCode
+     * @param string $errMsg
+     * @param string|array $info
+     * @return \think\response\Json
+     */
+    protected function infoJson(int $errCode, string $errMsg, string|array $info)
+    {
+        $data = array();
+        $data['error_code'] = $errCode;
+        $data['error_message'] = $errMsg;
+        $data['data'] = $info;
+        return json($data);
+    }
+
+    /**
+     * @param int $errCode
+     * @param string $errMsg
+     * @param int $page
+     * @param int $size
+     * @param int $total
+     * @param array $list
+     * @return \think\response\Json
+     */
+    protected function listJson(int $errCode, string $errMsg, int $page, int $size, int $total, array $list)
+    {
+        $data = array();
+        $data['error_code'] = $errCode;
+        $data['error_message'] = $errCode;
+        $data['data'] = array(
+            'page' => $page,
+            'size' => $size,
+            'total' => $total,
+            'total_page' => ceil($total / $size),
+            'list' => $list
+        );
+        return json($data);
+    }
 
     /**
      * 验证数据

@@ -2,13 +2,14 @@
 
 namespace app\business\admin;
 
+use app\base\BaseBusiness;
 use app\model\admin\MenuModel;
 
 /**
  * 后台菜单业务逻辑
  * @author koboshi
  */
-class MenuBusiness
+class MenuBusiness extends BaseBusiness
 {
     protected MenuModel $menuModel;
 
@@ -25,11 +26,11 @@ class MenuBusiness
     public function getActiveMenus()
     {
         $menus = $this->menuModel->where('deleted', 0)
-            ->column(array('menu_id', 'parent_id', 'name', 'route_name'))->select()->toArray();
+            ->column(array('menu_id', 'parent_id', 'name', 'route_name'));
         if (empty($menus)) {
             return array();
         }
-        return trans_tree(0, $menus);
+        return trans_tree(0, $menus, 'menu_id');
     }
 
     /**
@@ -43,7 +44,7 @@ class MenuBusiness
             return array();
         }
         $menus = $this->menuModel->where('parent_id', $parentId)->where('deleted', 0)
-            ->column(array('menu_id', 'parent_id', 'name', 'route_name'))->select()->toArray();
+            ->column(array('menu_id', 'parent_id', 'name', 'route_name'));
         if (empty($menus)) {
             return array();
         }
@@ -58,8 +59,7 @@ class MenuBusiness
     public function getAllMenus()
     {
         $menus = $this->menuModel->column(array('menu_id', 'parent_id', 'name', 'route_name', 'status', 'editor',
-            'deleted', 'add_time', 'edit_time', 'delete_time'))
-            ->select()->toArray();
+            'deleted', 'add_time', 'edit_time', 'delete_time'));
         if (empty($menus)) {
             return array();
         }
@@ -83,7 +83,7 @@ class MenuBusiness
         $data['deleted'] = $deleted;
         $data['add_time'] = $dateTime;
         $data['edit_time'] = $dateTime;
-        $data['delete_time'] = '0000-00-00 00:00:00';
+        $data['delete_time'] = EMPTY_DATETIME;
 
         $flag = $this->menuModel->save($data);
         if ($flag) {
