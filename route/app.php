@@ -25,4 +25,5 @@ Route::group(function () {
     Route::rule('login', 'admin.auth/login');
     Route::rule('logout', 'admin.auth/logout');
     Route::rule('chg_pwd', 'admin.auth/changePassword');
+    Route::rule('verify', 'admin.auth/verify');
 });

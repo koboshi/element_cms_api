@@ -68,7 +68,7 @@ class AuthBusiness extends BaseBusiness
         $data['expire_time'] = $dateTime;
         $this->userModel->where('admin_id', $userInfo['admin_id'])->save($data);
 
-        return array('uid' => $userInfo['admin_id'], 'ticket' => $ticket);
+        return array('uid' => $userInfo['admin_id'], 'ticket' => $ticket, 'username' => $userInfo['name']);
     }
 
     /**

@@ -49,6 +49,15 @@ class AuthController extends BaseController
         return $this->infoJson('0', '', array());
     }
 
+    public function verifyAction(int $uid, string $ticket)
+    {
+        $flag = $this->authBusiness->verify($uid, $ticket);
+        if (!$flag) {
+            return $this->infoJson('1', '登出失败，凭据异常', array());
+        }
+        return $this->infoJson('0', '', array());
+    }
+
     /**
      * 变更密码, 重置ticket
      * @param int $uid

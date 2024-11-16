@@ -13,7 +13,9 @@ class Authentication
 {
     protected $ignoreAuth = array(
         'admin.auth' => array(
-            'login' => true
+            'login' => true,
+            'logout' => true,
+            'verify' => true,
         ),
     );
 
