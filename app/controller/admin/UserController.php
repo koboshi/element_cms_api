@@ -20,21 +20,13 @@ class UserController extends BaseController
      * 获取所有用户
      * @return Json
      */
-    public function getAllAction(int $page, int $size = 20)
+    public function listAction(int $page, int $size = 20)
     {
         $username = $this->request->get('username', '');
         $deleted = $this->request->get('deleted', -1);
-        $userCount = $this->userBusiness->getAllUsers($username, $deleted, $page, true, $size);
-        $userList = $this->userBusiness->getAllUsers($username, $deleted, $page, false, $size);
+        $userRes = $this->userBusiness->getAllUsers($page, $size, $username, $deleted);
 
-        $data = array();
-        $data['page'] = $page;
-        $data['size'] = $size;
-        $data['total'] = $userCount;
-        $data['total_page'] = ceil($userCount / $size);
-        $data['list'] = $userList;
-        return $this->listJson(0, '', $page, $size, $userCount, $userList);
-        //return json($data);
+        return $this->listJson(0, '', $page, $size, $userRes['count'], $userRes['list']);
     }
 
     /**

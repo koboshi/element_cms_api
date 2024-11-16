@@ -21,30 +21,35 @@ class UserBusiness extends BaseBusiness
         $this->salt = env('APP_SALT', 'default');
     }
 
-
-    /**
-     * @param string $username
-     * @param int $deleted
-     * @param int $page
-     * @param $countOnly
-     * @param int $size
-     * @return array|int
-     */
-    public function getAllUsers(string $username, int $deleted, int $page, $countOnly = false, int $size = 20)
+    private function buildAllUsersQuery(string $username, int $deleted)
     {
-        $username = trim($username);
         $queryObj = $this->userModel;
+
+        $username = trim($username);
         if (!empty($username)) {
             $queryObj = $this->userModel->where('username', 'like', $username);
         }
         if ($deleted !== -1) {
             $queryObj->where('deleted', $deleted);
         }
-        if ($countOnly) {
-            return $queryObj->count();
-        }
-        return $queryObj->page($page, $size)->column(array('admin_id', 'role_id', 'name', 'editor', 'deleted', 'add_time',
-            'edit_time', 'delete_time'));
+        return $queryObj;
+    }
+
+
+    /**
+     * @param int $page
+     * @param int $size
+     * @param string $username
+     * @param int $deleted
+     * @return array
+     */
+    public function getAllUsers(int $page, int $size, string $username, int $deleted)
+    {
+        $userList = $this->buildAllUsersQuery($username, $deleted)->page($page, $size)->column(array('admin_id',
+            'role_id', 'name', 'editor', 'deleted', 'add_time', 'edit_time', 'delete_time'));
+        $userCount = $this->buildAllUsersQuery($username, $deleted)->count();
+
+        return ['count' => $userCount, 'list' => $userList];
     }
 
     /**

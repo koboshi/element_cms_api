@@ -16,15 +16,20 @@ class MenuController extends BaseController
         $this->menuBusiness = invoke(MenuBusiness::class);
     }
 
+    public function listAction(int $page, int $size = 20)
+    {
+//        $menuList = $this->menuBusiness->getAllMenus($page, false, $size);
+//        $menuCount = $this->menuBusiness->getAllMenus($page, true);
+        $menuRes = $this->menuBusiness->getAllMenus($page, $size);
+        return $this->listJson(0, '', $page, $size, $menuRes['count'], $menuRes['list']);
+    }
+
     /**
-     * 获取所有菜单项用于渲染(支持指定父id获取)
-     * @param int $parentId
+     * 获取所有菜单项用于渲染
      * @return Json
      */
-    public function getAllAction(int $parentId = 0)
+    public function treeAction()
     {
-        $controllerName = $this->request->controller(true);
-        $actionName = $this->request->action(true);
         $data = $this->menuBusiness->getActiveMenus();
 
         return json($data);

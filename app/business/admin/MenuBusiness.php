@@ -56,14 +56,13 @@ class MenuBusiness extends BaseBusiness
      * 用于菜单管理渲染
      * @return array
      */
-    public function getAllMenus()
+    public function getAllMenus(int $page, int $size)
     {
-        $menus = $this->menuModel->column(array('menu_id', 'parent_id', 'name', 'route_name', 'status', 'editor',
+        $result = array();
+        $result['list'] = $this->menuModel->page($page, $size)->column(array('menu_id', 'parent_id', 'name', 'route_name', 'status', 'editor',
             'deleted', 'add_time', 'edit_time', 'delete_time'));
-        if (empty($menus)) {
-            return array();
-        }
-        return $menus;
+        $result['count'] = $this->menuModel->count();
+        return $result;
     }
 
     /**

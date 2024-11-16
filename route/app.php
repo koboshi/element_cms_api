@@ -10,13 +10,19 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
+
 //路由定义
-//Route::get('think', function () {
-//    return 'hello,ThinkPHP6!';
-//});
+Route::group('menu', function () {
+   Route::rule('list', 'admin.menu/list');
+   Route::rule('tree', 'admin.menu/tree');
+});
 
-//Route::get('hello/:name', 'index/hello');
+Route::group('user', function() {
+    Route::rule('list', 'admin.user/list');
+});
 
-//Route::miss(function() {
-//    response()->code(404);
-//});
+Route::group(function () {
+    Route::rule('login', 'admin.auth/login');
+    Route::rule('logout', 'admin.auth/logout');
+    Route::rule('chg_pwd', 'admin.auth/changePassword');
+});

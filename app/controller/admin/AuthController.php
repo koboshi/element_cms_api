@@ -69,20 +69,4 @@ class AuthController extends BaseController
         }
         return $this->infoJson('0', '', array());
     }
-
-    /**
-     * 验证ticket
-     * @param int $uid
-     * @param string $ticket
-     * @return Json
-     */
-    public function verifyAction(int $uid, string $ticket)
-    {
-        //??应该作为公共前置方法实现
-        $flag = $this->authBusiness->verify($uid, $ticket);
-        if (!$flag) {
-            return $this->infoJson('1', '凭据异常', array());
-        }
-        return $this->infoJson('0', '', array());
-    }
 }
